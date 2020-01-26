@@ -1,8 +1,9 @@
 {
   "name": "dynamicinteractivemap",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Cached, orderable and filterable data structure with real time rendering updates",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "_publish": "npm run build && npm run test && npm publish",
     "build": "tsc",

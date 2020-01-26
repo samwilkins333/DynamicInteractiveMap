@@ -1,8 +1,8 @@
-import DynamicOrderedMap, { Orderable, Matchable, Comparators, Compare } from "./dynamic_map";
+import DynamicInteractiveMap, { Orderable, Matchable, Comparators, Compare } from "./dynamic_interactive_map";
 import { Opt, IterateHandler, PredicateFilter, MapUtils } from "./map_utilities";
 
 export {
-    DynamicOrderedMap,
+    DynamicInteractiveMap,
     Orderable,
     Matchable,
     Comparators,

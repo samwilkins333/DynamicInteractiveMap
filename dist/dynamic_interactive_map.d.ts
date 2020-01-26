@@ -13,7 +13,7 @@ export declare namespace Comparators {
     const unsorted: () => number;
     const sorted: <T>(key: keyof T, descending?: boolean) => (a: [string, T], b: [string, T]) => number;
 }
-export default class DynamicOrderedMap<K, V extends Matchable> {
+export default class DynamicInteractiveMap<K, V extends Matchable> {
     private initial_state;
     private current_state;
     private predicateFilter;
@@ -24,6 +24,7 @@ export default class DynamicOrderedMap<K, V extends Matchable> {
     private _currentFilter;
     private _currentComparator?;
     constructor(init: Map<K, V>, d: Orderable<V>, h?: IterateHandler<K, V, Orderable<V>>);
+    get render(): V[];
     get currentOrdering(): Orderable<V>;
     get initial(): Map<K, V>;
     get current(): Map<K, V>;

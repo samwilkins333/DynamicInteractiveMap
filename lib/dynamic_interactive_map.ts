@@ -20,7 +20,7 @@ export namespace Comparators {
     export const sorted = <T>(key: keyof T, descending = true) => (a: [string, T], b: [string, T]) => (b[1][key] > a[1][key] ? -1 : 1) * (descending ? 1 : -1);
 }
 
-export default class DynamicOrderedMap<K, V extends Matchable> {
+export default class DynamicInteractiveMap<K, V extends Matchable> {
     @observable private initial_state: Map<K, V>;
     @observable private current_state: Map<K, V>;
     private predicateFilter: PredicateFilter<K, V, string> = (e, query) => {
@@ -49,6 +49,11 @@ export default class DynamicOrderedMap<K, V extends Matchable> {
         this._currentFilter = ""
 
         this.cache(this.initial_state, this.currentOrdering);
+    }
+
+    @computed
+    public get render() {
+        return MapUtils.valuesOf(this.current);
     }
 
     @computed
