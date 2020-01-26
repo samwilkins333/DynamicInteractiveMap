@@ -1,0 +1,28 @@
+{
+  "name": "dynamicinteractivemap",
+  "version": "1.0.0",
+  "description": "Cached, orderable and filterable data structure with real time rendering updates",
+  "main": "index.js",
+  "scripts": {
+    "_publish": "npm run build && npm run test && npm publish",
+    "build": "tsc",
+    "test": "tsc ./test/*.ts && mocha --exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samwilkins333/DynamicInteractiveMap.git"
+  },
+  "author": "Sam Wilkins <samwilkins333@gmail.com> (http://www.samwilkins.me)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samwilkins333/DynamicInteractiveMap/issues"
+  },
+  "homepage": "https://github.com/samwilkins333/DynamicInteractiveMap#readme",
+  "dependencies": {
+    "@types/assert": "^1.4.4",
+    "@types/node": "^13.5.0",
+    "assert": "^2.0.0",
+    "mobx": "^5.15.3",
+    "mocha": "^7.0.1"
+  }
+}
