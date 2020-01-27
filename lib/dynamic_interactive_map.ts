@@ -17,7 +17,14 @@ export namespace Compare {
 
 export namespace Comparators {
     export const unsorted = () => 0;
-    export const sorted = <T>(key: keyof T, descending = true) => (a: [string, T], b: [string, T]) => (b[1][key] > a[1][key] ? -1 : 1) * (descending ? 1 : -1);
+    export const sorted = <T>(key: keyof T, descending = true) => (a: [string, T], b: [string, T]) => {
+        const first = a[1][key];
+        const second = b[1][key];
+        if (second === first) {
+            return 0;
+        }
+        return (second > first ? -1 : 1) * (descending ? 1 : -1);
+    }
 }
 
 export default class DynamicInteractiveMap<K, V extends Matchable> {

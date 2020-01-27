@@ -14,7 +14,14 @@ var Comparators;
     Comparators.unsorted = function () { return 0; };
     Comparators.sorted = function (key, descending) {
         if (descending === void 0) { descending = true; }
-        return function (a, b) { return (b[1][key] > a[1][key] ? -1 : 1) * (descending ? 1 : -1); };
+        return function (a, b) {
+            var first = a[1][key];
+            var second = b[1][key];
+            if (second === first) {
+                return 0;
+            }
+            return (second > first ? -1 : 1) * (descending ? 1 : -1);
+        };
     };
 })(Comparators = exports.Comparators || (exports.Comparators = {}));
 var DynamicInteractiveMap = /** @class */ (function () {
