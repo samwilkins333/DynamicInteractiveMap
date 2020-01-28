@@ -36,7 +36,20 @@ var DynamicInteractiveMap = /** @class */ (function () {
         this.isCaseSensitive = false;
         this.setCaseSensitivity = function (value) {
             _this.isCaseSensitive = value;
-            _this.filterBy(undefined);
+            _this.filterBy();
+        };
+        this.insert = function (key, value) {
+            _this.initial_state.set(key, value);
+            _this._orderingCache = new Map();
+            _this.sortBy(_this._currentComparator, _this.currentOrdering);
+        };
+        this.remove = function (key) {
+            var initial_state = _this.initial_state;
+            var stored = initial_state.get(key);
+            initial_state.delete(key);
+            _this._orderingCache = new Map();
+            _this.sortBy(_this._currentComparator, _this.currentOrdering);
+            return stored;
         };
         this.sortBy = function (comparator, ordering, updateGui) {
             if (updateGui === void 0) { updateGui = true; }
@@ -59,11 +72,6 @@ var DynamicInteractiveMap = /** @class */ (function () {
             if (updateGui)
                 _this.filterBy(_this._currentFilter);
         };
-        this.insert = function (key, value) {
-            _this.initial_state.set(key, value);
-            _this._orderingCache = new Map();
-            _this.sortBy(_this._currentComparator, _this.currentOrdering);
-        };
         this.filterBy = function (phrase) {
             if (phrase !== undefined)
                 _this._currentFilter = phrase.trim();
@@ -80,7 +88,7 @@ var DynamicInteractiveMap = /** @class */ (function () {
                 info: _this._currentFilter
             });
         };
-        this.invalidateOrdering = function (ordering) { return _this._orderingCache.delete(ordering); };
+        this.invalidateOrderingFor = function (ordering) { return _this._orderingCache.delete(ordering); };
         // maintains an insertion-ordered list of activity ids,
         // capturing a lightweight snapshot of the map ordering
         this.cache = function (src, ordering) {
@@ -106,20 +114,6 @@ var DynamicInteractiveMap = /** @class */ (function () {
         this._currentFilter = "";
         this.cache(this.initial_state, this.currentOrdering);
     }
-    Object.defineProperty(DynamicInteractiveMap.prototype, "render", {
-        get: function () {
-            return map_utilities_1.MapUtils.valuesOf(this.current);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(DynamicInteractiveMap.prototype, "currentOrdering", {
-        get: function () {
-            return this._currentOrdering;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(DynamicInteractiveMap.prototype, "initial", {
         get: function () {
             return this.initial_state;
@@ -130,6 +124,20 @@ var DynamicInteractiveMap = /** @class */ (function () {
     Object.defineProperty(DynamicInteractiveMap.prototype, "current", {
         get: function () {
             return this.current_state;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DynamicInteractiveMap.prototype, "render", {
+        get: function () {
+            return map_utilities_1.MapUtils.valuesOf(this.current);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DynamicInteractiveMap.prototype, "currentOrdering", {
+        get: function () {
+            return this._currentOrdering;
         },
         enumerable: true,
         configurable: true
@@ -157,31 +165,34 @@ var DynamicInteractiveMap = /** @class */ (function () {
     ], DynamicInteractiveMap.prototype, "_currentComparator", void 0);
     __decorate([
         mobx_1.computed
-    ], DynamicInteractiveMap.prototype, "render", null);
-    __decorate([
-        mobx_1.computed
-    ], DynamicInteractiveMap.prototype, "currentOrdering", null);
-    __decorate([
-        mobx_1.computed
     ], DynamicInteractiveMap.prototype, "initial", null);
     __decorate([
         mobx_1.computed
     ], DynamicInteractiveMap.prototype, "current", null);
     __decorate([
-        mobx_1.action
-    ], DynamicInteractiveMap.prototype, "setCaseSensitivity", void 0);
+        mobx_1.computed
+    ], DynamicInteractiveMap.prototype, "render", null);
+    __decorate([
+        mobx_1.computed
+    ], DynamicInteractiveMap.prototype, "currentOrdering", null);
     __decorate([
         mobx_1.action
-    ], DynamicInteractiveMap.prototype, "sortBy", void 0);
+    ], DynamicInteractiveMap.prototype, "setCaseSensitivity", void 0);
     __decorate([
         mobx_1.action
     ], DynamicInteractiveMap.prototype, "insert", void 0);
     __decorate([
         mobx_1.action
+    ], DynamicInteractiveMap.prototype, "remove", void 0);
+    __decorate([
+        mobx_1.action
+    ], DynamicInteractiveMap.prototype, "sortBy", void 0);
+    __decorate([
+        mobx_1.action
     ], DynamicInteractiveMap.prototype, "filterBy", void 0);
     __decorate([
         mobx_1.action
-    ], DynamicInteractiveMap.prototype, "invalidateOrdering", void 0);
+    ], DynamicInteractiveMap.prototype, "invalidateOrderingFor", void 0);
     __decorate([
         mobx_1.action
     ], DynamicInteractiveMap.prototype, "cache", void 0);

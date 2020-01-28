@@ -27,7 +27,7 @@ export namespace Comparators {
     }
 }
 
-export default class DynamicInteractiveMap<K, V extends Matchable> {
+export default class DynamicInteractiveMap<K extends string | number, V extends Matchable> {
     @observable private initial_state: Map<K, V>;
     @observable private current_state: Map<K, V>;
     private predicateFilter: PredicateFilter<K, V, string> = (e, query) => {
@@ -59,6 +59,16 @@ export default class DynamicInteractiveMap<K, V extends Matchable> {
     }
 
     @computed
+    protected get initial() {
+        return this.initial_state;
+    }
+
+    @computed
+    protected get current() {
+        return this.current_state
+    }
+
+    @computed
     public get render() {
         return MapUtils.valuesOf(this.current);
     }
@@ -68,24 +78,31 @@ export default class DynamicInteractiveMap<K, V extends Matchable> {
         return this._currentOrdering;
     }
 
-    @computed
-    public get initial() {
-        return this.initial_state;
-    }
-
-    @computed
-    public get current() {
-        return this.current_state
-    }
-
     @action
-    setCaseSensitivity = (value: boolean) => {
+    public setCaseSensitivity = (value: boolean) => {
         this.isCaseSensitive = value;
-        this.filterBy(undefined);
+        this.filterBy();
     }
 
     @action
-    sortBy = (comparator: Compare.Map.ByValue<V>, ordering: Orderable<V>, updateGui: boolean = true) => {
+    public insert = (key: K, value: V) => {
+        this.initial_state.set(key, value);
+        this._orderingCache = new Map<keyof V, K[]>();
+        this.sortBy(this._currentComparator!, this.currentOrdering);
+    }
+
+    @action
+    public remove = (key: K) => {
+        const { initial_state } = this;
+        const stored = initial_state.get(key);
+        initial_state.delete(key);
+        this._orderingCache = new Map<keyof V, K[]>();
+        this.sortBy(this._currentComparator!, this.currentOrdering);
+        return stored;
+    }
+
+    @action
+    public sortBy = (comparator: Compare.Map.ByValue<V>, ordering: Orderable<V>, updateGui: boolean = true) => {
         let source: Opt<Map<K, V>> = null;
         this._currentComparator = comparator;
 
@@ -105,14 +122,7 @@ export default class DynamicInteractiveMap<K, V extends Matchable> {
     }
 
     @action
-    insert = (key: K, value: V) => {
-        this.initial_state.set(key, value);
-        this._orderingCache = new Map<keyof V, K[]>();
-        this.sortBy(this._currentComparator!, this.currentOrdering);
-    }
-
-    @action
-    filterBy = (phrase?: string) => {
+    public filterBy = (phrase?: string) => {
         if (phrase !== undefined) this._currentFilter = phrase.trim();
         // reconstruct full ordered map from ranking cache (ignores previous filter state)
         // order it appropriately
@@ -129,19 +139,19 @@ export default class DynamicInteractiveMap<K, V extends Matchable> {
     }
 
     @action
-    invalidateOrdering = (ordering: keyof V) => this._orderingCache.delete(ordering);
+    public invalidateOrderingFor = (ordering: keyof V) => this._orderingCache.delete(ordering);
 
     // maintains an insertion-ordered list of activity ids,
     // capturing a lightweight snapshot of the map ordering
     @action
-    cache = (src: Map<K, V>, ordering: Orderable<V>) => {
+    private cache = (src: Map<K, V>, ordering: Orderable<V>) => {
         let record: K[] = [];
         MapUtils.iterate(src, (e) => record.push(e.key));
         this._orderingCache.set(ordering, record);
     }
 
     @action
-    apply = (ordering: Orderable<V>) => {
+    private apply = (ordering: Orderable<V>) => {
         this._currentOrdering = ordering
         let cached = this._orderingCache.get(ordering);
         if (!cached) return false;

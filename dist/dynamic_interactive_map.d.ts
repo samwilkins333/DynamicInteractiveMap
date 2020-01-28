@@ -13,7 +13,7 @@ export declare namespace Comparators {
     const unsorted: () => number;
     const sorted: <T>(key: keyof T, descending?: boolean) => (a: [string, T], b: [string, T]) => number;
 }
-export default class DynamicInteractiveMap<K, V extends Matchable> {
+export default class DynamicInteractiveMap<K extends string | number, V extends Matchable> {
     private initial_state;
     private current_state;
     private predicateFilter;
@@ -24,15 +24,16 @@ export default class DynamicInteractiveMap<K, V extends Matchable> {
     private _currentFilter;
     private _currentComparator?;
     constructor(init: Map<K, V>, d: Orderable<V>, h?: IterateHandler<K, V, Orderable<V>>);
+    protected get initial(): Map<K, V>;
+    protected get current(): Map<K, V>;
     get render(): V[];
     get currentOrdering(): Orderable<V>;
-    get initial(): Map<K, V>;
-    get current(): Map<K, V>;
     setCaseSensitivity: (value: boolean) => void;
-    sortBy: (comparator: Compare.Map.ByValue<V>, ordering: Orderable<V>, updateGui?: boolean) => void;
     insert: (key: K, value: V) => void;
+    remove: (key: K) => V | undefined;
+    sortBy: (comparator: Compare.Map.ByValue<V>, ordering: Orderable<V>, updateGui?: boolean) => void;
     filterBy: (phrase?: string | undefined) => void;
-    invalidateOrdering: (ordering: keyof V) => boolean;
-    cache: (src: Map<K, V>, ordering: Orderable<V>) => void;
-    apply: (ordering: Orderable<V>) => boolean;
+    invalidateOrderingFor: (ordering: keyof V) => boolean;
+    private cache;
+    private apply;
 }

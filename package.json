@@ -1,6 +1,6 @@
 {
   "name": "dynamicinteractivemap",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Cached, orderable and filterable data structure with real time rendering updates",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
